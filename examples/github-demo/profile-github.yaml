@@ -1,0 +1,43 @@
+# Demo provider profile for GitHub: REST and GraphQL with `access: full`, no git push.
+# Import it with: openshell profile import --file examples/github-demo/profile-github.yaml
+# To change a profile that exists already, export it first: `profile update` needs
+# its resource_version.
+#
+#   - github.com does not allow git-receive-pack. A `git push` goes to github.com,
+#     which is L7-opaque: the middleware never sees it. Agents use the REST API.
+#   - api.github.com keeps `access: full`, so DELETE (branch delete) reaches the middleware.
+id: github-test
+display_name: GitHub (OKed demo)
+description: GitHub REST and GraphQL for a test repo, no git push
+category: source_control
+credentials:
+  - name: api_token
+    description: Fine-grained token scoped to your test repo
+    env_vars: [GITHUB_TOKEN, GH_TOKEN]
+    required: true
+    auth_style: bearer
+    header_name: authorization
+discovery:
+  credentials: [api_token]
+endpoints:
+  - host: api.github.com
+    port: 443
+    protocol: rest
+    access: full
+    enforcement: enforce
+  - host: api.github.com
+    port: 443
+    path: /graphql
+    protocol: graphql
+    access: full
+    enforcement: enforce
+  - host: github.com
+    port: 443
+    protocol: rest
+    enforcement: enforce
+    rules:
+      - allow: { method: GET, path: "**" }
+      - allow: { method: HEAD, path: "**" }
+      - allow: { method: OPTIONS, path: "**" }
+      - allow: { method: POST, path: "/**/git-upload-pack" }
+binaries: [/usr/bin/gh, /usr/local/bin/gh, /usr/bin/git, /usr/local/bin/git, /usr/bin/curl]

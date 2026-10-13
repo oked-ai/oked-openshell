@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  launchd agent for oked-openshell. It starts at login, before you use OpenShell,
+  and starts again if it stops. The OpenShell gateway does not start when a
+  registered middleware is not running.
+  deploy/macos/install.sh fills in the __PLACEHOLDERS__ and loads the agent.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>ai.oked.openshell</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>__REPO__/deploy/macos/run.sh</string>
+    <string>__CONFIG__</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>OKED_NODE_DIR</key>
+    <string>__NODE_DIR__</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>ThrottleInterval</key>
+  <integer>5</integer>
+  <key>StandardOutPath</key>
+  <string>__HOME__/Library/Logs/oked-openshell.log</string>
+  <key>StandardErrorPath</key>
+  <string>__HOME__/Library/Logs/oked-openshell.err.log</string>
+</dict>
+</plist>

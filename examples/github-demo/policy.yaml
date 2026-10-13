@@ -1,0 +1,43 @@
+# Demo policy for the `demo` sandbox: a base policy plus the OKed middleware.
+# Apply with: openshell policy set demo --policy examples/github-demo/policy.yaml --wait
+# (`policy update` cannot change middleware.)
+#
+# The github-test provider adds the api.github.com rules (access: full, so DELETE
+# reaches the middleware). Use profile-github.yaml so that the provider does not
+# allow git push.
+version: 1
+filesystem_policy:
+  include_workdir: true
+  read_only:
+    - /bin
+    - /usr
+    - /lib
+    - /proc
+    - /dev/urandom
+    - /etc
+    - /var/log
+  read_write:
+    - /tmp
+    - /dev/null
+landlock:
+  compatibility: best_effort
+network_policies:
+  npm_install:
+    name: npm_install
+    endpoints:
+      - host: registry.npmjs.org
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: read-only
+        allow_encoded_slash: true
+    binaries:
+      - path: /usr/local/bin/node
+network_middlewares:
+  oked-approval:
+    name: OKed action approval
+    middleware: oked-approval
+    order: 10
+    on_error: fail_closed
+    endpoints:
+      include: ["api.github.com"]

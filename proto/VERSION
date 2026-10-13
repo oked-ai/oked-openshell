@@ -1,0 +1,11 @@
+Source:   https://github.com/NVIDIA/OpenShell
+Tag:      v0.1.2
+Commit:   6648bd0c290efbc41ba131ee9831ee45cd431f94
+Copied:   2026-10-06
+Files:
+  supervisor_middleware.proto  sha256 bee96ac940303d8a7530e6e2283a98077bb428a05ef610b51d018ea18377bebd
+  extension.proto              sha256 60f28ee9dc846d41152f4db7e82a439c78d024786efaceb464900d1d1ad129ad
+
+The files are unchanged copies. Do not edit them. To upgrade, copy both files
+from the new tag, update this note, and read the diff before you change code.
+NVIDIA says the middleware API is still evolving.

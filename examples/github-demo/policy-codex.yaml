@@ -1,0 +1,53 @@
+# Demo policy for a Codex sandbox (`demo-codex`): the base policy, Python to
+# api.github.com, and the OKed middleware.
+# Apply with: openshell policy set demo-codex --policy examples/github-demo/policy-codex.yaml --wait
+#
+# Codex calls the GitHub API with Python urllib, not curl. The github-test
+# provider allows only gh, git and curl, so this policy adds python3.11 for
+# api.github.com. The middleware still sees every request.
+version: 1
+filesystem_policy:
+  include_workdir: true
+  read_only:
+    - /bin
+    - /usr
+    - /lib
+    - /proc
+    - /dev/urandom
+    - /etc
+    - /var/log
+  read_write:
+    - /tmp
+    - /dev/null
+landlock:
+  compatibility: best_effort
+network_policies:
+  npm_install:
+    name: npm_install
+    endpoints:
+      - host: registry.npmjs.org
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: read-only
+        allow_encoded_slash: true
+    binaries:
+      - path: /usr/local/bin/node
+  codex_python_github:
+    name: codex_python_github
+    endpoints:
+      - host: api.github.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: full
+    binaries:
+      - path: /usr/bin/python3.11
+network_middlewares:
+  oked-approval:
+    name: OKed action approval
+    middleware: oked-approval
+    order: 10
+    on_error: fail_closed
+    endpoints:
+      include: ["api.github.com"]

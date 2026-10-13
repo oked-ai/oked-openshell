@@ -1,0 +1,26 @@
+# oked-openshell config for the GitHub demo.
+# Secrets come from environment variables, never from this file.
+
+name: oked-approval
+listen: 127.0.0.1:50052
+
+oked:
+  api_url: https://api.oked.ai
+  api_key_env: OKED_API_KEY
+  require_receipt: true
+
+github:
+  # Fine-grained token: read-only "Pull requests" and "Metadata", limited to the demo repo.
+  read_token_env: OKED_GITHUB_READ_TOKEN
+
+approval:
+  pending_window_minutes: 10
+  grant_valid_minutes: 5
+  status_check_timeout_ms: 1000
+
+approvers:
+  default: core-team
+  sandboxes:
+    demo: core-team
+
+rules: []

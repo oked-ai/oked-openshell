@@ -1,0 +1,97 @@
+{
+  "_note": "Request shapes from real Claude Code traffic to the GitHub REST API. Method, path, query keys, content type and body keys are real. Every value is a placeholder.",
+  "sandbox_id": "400e804a-b9e4-4faa-a5f1-a5dbe5f4c9cf",
+  "sandbox": "spike",
+  "requests": [
+    {
+      "id": "t9-1-create-issue",
+      "method": "POST",
+      "path": "/repos/OrenDor/oked-openshell-test/issues",
+      "query": "",
+      "content_type": "application/x-www-form-urlencoded",
+      "body": { "title": "placeholder title", "body": "placeholder body" },
+      "expect": { "operation": "github.issues.create", "kind": "write", "resource": "OrenDor/oked-openshell-test" }
+    },
+    {
+      "id": "t9-2-read-main-ref",
+      "method": "GET",
+      "path": "/repos/OrenDor/oked-openshell-test/git/ref/heads/main",
+      "query": "",
+      "content_type": "",
+      "body": null,
+      "expect": { "operation": "github.read", "kind": "read", "resource": null }
+    },
+    {
+      "id": "t9-2-create-branch",
+      "method": "POST",
+      "path": "/repos/OrenDor/oked-openshell-test/git/refs",
+      "query": "",
+      "content_type": "application/x-www-form-urlencoded",
+      "body": { "ref": "refs/heads/feature-x", "sha": "0000000000000000000000000000000000000000" },
+      "expect": { "operation": "github.git.createRef", "kind": "write", "resource": "OrenDor/oked-openshell-test@feature-x" }
+    },
+    {
+      "id": "t9-2-commit-file",
+      "method": "PUT",
+      "path": "/repos/OrenDor/oked-openshell-test/contents/t9.txt",
+      "query": "",
+      "content_type": "application/x-www-form-urlencoded",
+      "body": { "message": "placeholder message", "content": "cGxhY2Vob2xkZXI=", "branch": "feature-x" },
+      "expect": { "operation": "github.contents.put", "kind": "write", "resource": "OrenDor/oked-openshell-test@feature-x" }
+    },
+    {
+      "id": "t9-2-open-pr",
+      "method": "POST",
+      "path": "/repos/OrenDor/oked-openshell-test/pulls",
+      "query": "",
+      "content_type": "application/x-www-form-urlencoded",
+      "body": { "title": "placeholder title", "head": "feature-x", "base": "main" },
+      "expect": { "operation": "github.pulls.create", "kind": "write", "resource": "OrenDor/oked-openshell-test" }
+    },
+    {
+      "id": "t9-3-list-prs",
+      "method": "GET",
+      "path": "/repos/OrenDor/oked-openshell-test/pulls",
+      "query": "state=open&per_page=100",
+      "content_type": "",
+      "body": null,
+      "expect": { "operation": "github.read", "kind": "read", "resource": null }
+    },
+    {
+      "id": "t9-3-comment",
+      "method": "POST",
+      "path": "/repos/OrenDor/oked-openshell-test/issues/3/comments",
+      "query": "",
+      "content_type": "application/x-www-form-urlencoded",
+      "body": { "body": "placeholder comment" },
+      "expect": { "operation": "github.issues.comment", "kind": "write", "resource": "OrenDor/oked-openshell-test#3" }
+    },
+    {
+      "id": "t9-4-list-prs-by-base",
+      "method": "GET",
+      "path": "/repos/OrenDor/oked-openshell-test/pulls",
+      "query": "state=open&base=main&per_page=100",
+      "content_type": "",
+      "body": null,
+      "expect": { "operation": "github.read", "kind": "read", "resource": null }
+    },
+    {
+      "id": "t9-4-merge",
+      "method": "PUT",
+      "path": "/repos/OrenDor/oked-openshell-test/pulls/3/merge",
+      "query": "",
+      "content_type": "application/x-www-form-urlencoded",
+      "body": {},
+      "expect": { "operation": "github.pulls.merge", "kind": "write", "resource": "OrenDor/oked-openshell-test#3" }
+    },
+    {
+      "id": "t9-5-delete-branch",
+      "method": "DELETE",
+      "path": "/repos/OrenDor/oked-openshell-test/git/refs/heads/t9-branch",
+      "query": "",
+      "content_type": "",
+      "body": null,
+      "expect": { "operation": "github.git.deleteRef", "kind": "delete", "resource": "OrenDor/oked-openshell-test@t9-branch" }
+    }
+  ]
+}

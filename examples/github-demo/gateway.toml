@@ -1,0 +1,17 @@
+# Add this block to ~/.config/openshell/gateway.toml, then run:
+#   brew services restart openshell
+#
+# Start oked-openshell first. The gateway does not start when a registered
+# middleware is not running (deploy/macos has a launchd agent for this).
+#
+# allow_insecure_transport: the address is plain http on loopback. The gateway
+# warns that extension authentication is off. That is acceptable on one Mac.
+#
+# timeout: most evaluations answer in a few ms. A retry can ask OKed for the
+# approval status, with a 1 s limit, so the gateway limit must be above that.
+[[openshell.supervisor.middleware]]
+name = "oked-approval"
+grpc_endpoint = "http://127.0.0.1:50052"
+allow_insecure_transport = true
+max_payload_bytes = 4194304
+timeout = "2s"
