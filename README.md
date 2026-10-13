@@ -7,7 +7,7 @@ OpenShell supervisor middleware. OpenShell calls it after network policy allows 
 and before OpenShell injects credentials.
 
 Status: early preview. It covers the GitHub REST API. Tested with OpenShell 0.1.2 and 0.1.3.
-You need an OKed account: install `@oked/claude-code` and run `oked init` to get an API key.
+You need an OKed API key. Step 1 of the quickstart shows how to get one.
 
 ## The problem
 
@@ -110,27 +110,41 @@ a new review of the proto. NVIDIA says the middleware API is still evolving.
 **Start oked-openshell first.** The OpenShell gateway does not start when a registered
 middleware is not running.
 
-1. Install: `npm install`.
-2. Put the secrets in `~/.config/oked-openshell/env` (`chmod 600`):
+1. Get an OKed API key. Install the OKed CLI and pair this machine:
+   ```bash
+   npm install -g @oked/claude-code
+   oked init
    ```
-   OKED_API_KEY=...            # optional: else the key from `oked init` (~/.oked/config.json)
+   `oked init` shows a pairing code and offers to open your browser. Sign in, and the key goes
+   to `~/.oked/config.json`. The start script reads it from there. `oked init` also adds the
+   OKed hook for Claude Code to `.claude/settings.json` in the current folder. To remove that
+   hook, run `oked uninstall` in the same folder.
+2. Install: `npm install`.
+3. Put the GitHub token in `~/.config/oked-openshell/env` (`chmod 600`):
+   ```
    OKED_GITHUB_READ_TOKEN=...  # fine-grained, read-only "Pull requests" and "Metadata"
+   OKED_API_KEY=...            # optional: a key other than the one from `oked init`
    ```
-3. Start the service: `deploy/macos/run.sh examples/github-demo/oked-openshell.yaml`.
+4. Start the service: `deploy/macos/run.sh examples/github-demo/oked-openshell.yaml`.
    To start it at login, run `deploy/macos/install.sh` (launchd agent `ai.oked.openshell`,
    log in `~/Library/Logs/oked-openshell.log`). Run it from a checkout that stays in place,
    not from a temporary worktree: the agent runs the code at that path.
-4. Register it in `~/.config/openshell/gateway.toml` (see
+5. Register it in `~/.config/openshell/gateway.toml` (see
    [examples/github-demo/gateway.toml](examples/github-demo/gateway.toml)), then run
    `brew services restart openshell`.
-5. Attach it in the sandbox policy and apply with `policy set` (`policy update` cannot change
+6. Attach it in the sandbox policy and apply with `policy set` (`policy update` cannot change
    middleware): `openshell policy set demo --policy examples/github-demo/policy.yaml --wait`.
-6. For Claude Code, add the agent instructions to the sandbox. The script shows the lines and
+7. For Claude Code, add the agent instructions to the sandbox. The script shows the lines and
    asks before it changes anything: `deploy/setup-agent.sh demo`. See
    [Agent compatibility](#agent-compatibility).
 
 The registration uses `allow_insecure_transport = true` on loopback. The gateway warns that
 extension authentication is off. This is acceptable on one machine.
+
+### Linux
+
+Linux support is coming. The start script and the login agent in `deploy/macos/` need zsh
+and launchd, and they are tested on macOS only.
 
 ## Config
 
@@ -216,10 +230,15 @@ receipt ID and latency. The log never has bodies, header values, query values or
 
 ## Known limits
 
+- **OpenShell has no "pending" result.** A middleware can only allow or deny, so OKed denies
+  and the agent sends the request again. The upstream proposal for a pending result is
+  [NVIDIA/OpenShell#4406](https://github.com/NVIDIA/OpenShell/issues/4406).
 - **`git push` is not covered.** It goes to `github.com`, which is L7-opaque: the middleware
   never sees it. The demo profile does not allow `git push`. Agents use the REST API.
 - **MCP over HTTP is not parsed.** An MCP request is an opaque write, so it needs approval.
-- **`originating_process` is always empty** in OpenShell 0.1.2. OKed routes by `sandbox_id`.
+- **`originating_process` is always empty** in this OpenShell version (RFC 0009,
+  [NVIDIA/OpenShell#4269](https://github.com/NVIDIA/OpenShell/issues/4269)). Tested with
+  OpenShell 0.1.3. OKed routes by `sandbox_id`.
 - **No authentication on the extension call** (`allow_insecure_transport`).
 - **The retry state is on one machine.** It survives a restart, not a move to another host.
 - **Agents differ** (see [Agent compatibility](#agent-compatibility)). An agent that ignores
