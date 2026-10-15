@@ -110,15 +110,15 @@ a new review of the proto. NVIDIA says the middleware API is still evolving.
 **Start oked-openshell first.** The OpenShell gateway does not start when a registered
 middleware is not running.
 
-1. Get an OKed API key. Install the OKed CLI and pair this machine:
+1. Get an OKed API key. Install the OKed CLI (`@oked/claude-code` 0.6.5 or newer) and pair
+   this machine:
    ```bash
    npm install -g @oked/claude-code
-   oked init
+   oked init --key-only
    ```
-   `oked init` shows a pairing code and offers to open your browser. Sign in, and the key goes
-   to `~/.oked/config.json`. The start script reads it from there. `oked init` also adds the
-   OKed hook for Claude Code to `.claude/settings.json` in the current folder. To remove that
-   hook, run `oked uninstall` in the same folder.
+   It shows a pairing code and offers to open your browser. Sign in, and the key goes to
+   `~/.oked/config.json`. The start script reads it from there. `--key-only` adds no Claude
+   Code hook. On a server or over SSH, add `--no-browser` and open the printed link yourself.
 2. Install: `npm install`.
 3. Put the GitHub token in `~/.config/oked-openshell/env` (`chmod 600`):
    ```
