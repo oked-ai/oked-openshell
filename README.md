@@ -1,5 +1,7 @@
 # oked-openshell
 
+[![CI](https://github.com/oked-ai/oked-openshell/actions/workflows/ci.yml/badge.svg)](https://github.com/oked-ai/oked-openshell/actions/workflows/ci.yml)
+
 ![An agent's risky action waits for a person's approval on their phone.](docs/oked-flow.png)
 
 Action-specific human approval for agents that run in NVIDIA OpenShell. OKed runs as an
