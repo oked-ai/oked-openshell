@@ -122,9 +122,11 @@ middleware is not running.
    `~/.oked/config.json`. The start script reads it from there. `--key-only` adds no Claude
    Code hook. On a server or over SSH, add `--no-browser` and open the printed link yourself.
 2. Install: `npm install`.
-3. Put the GitHub token in `~/.config/oked-openshell/env` (`chmod 600`):
+3. Optional: put the secrets in `~/.config/oked-openshell/env` (`chmod 600`). The service
+   starts without this file. Without the GitHub token, it asks you more often and shows less
+   on merge cards. See [GitHub read token (optional)](#github-read-token-optional).
    ```
-   OKED_GITHUB_READ_TOKEN=...  # fine-grained, read-only "Pull requests" and "Metadata"
+   OKED_GITHUB_READ_TOKEN=...  # optional: fine-grained, read-only "Pull requests" and "Metadata"
    OKED_API_KEY=...            # optional: a key other than the one from `oked init`
    ```
 4. Start the service: `deploy/macos/run.sh examples/github-demo/oked-openshell.yaml`.
@@ -161,7 +163,7 @@ oked:
   api_key_env: OKED_API_KEY
   require_receipt: true        # check the signed receipt before an approval allows a request
 github:
-  read_token_env: OKED_GITHUB_READ_TOKEN
+  read_token_env: OKED_GITHUB_READ_TOKEN   # optional; see "GitHub read token (optional)"
 approval:
   pending_window_minutes: 10
   grant_valid_minutes: 5
@@ -178,6 +180,24 @@ rules: []
 
 An approver group is an OKed API key. OKed sends the approval to the Telegram account and
 dashboard of the operator who owns that key.
+
+### GitHub read token (optional)
+
+`github.read_token_env` names the variable that holds a GitHub token. The service starts and
+blocks safely without it. The `start` log line shows `githubEnrichment: false` when the
+token is not set.
+
+The token belongs to OKed, not to the agent. OKed uses it for two read-only GET calls only.
+Use a fine-grained token with read-only "Pull requests" and "Metadata", limited to the repos
+that the agent uses.
+
+| Lookup | With the token | Without the token |
+|---|---|---|
+| Default branch (`GET /repos/{owner}/{repo}`) | A file write or ref update on a feature branch is `warning` and needs no approval. A branch delete on a feature branch is `review`. | The default branch is unknown, so each branch counts as the default branch. Each branch write needs approval. Each branch delete is `high_stakes`. |
+| PR details (`GET /repos/{owner}/{repo}/pulls/{n}`) | The merge card shows the PR title and the base and head branches. | The merge card shows only the repo and the PR number. |
+
+The token stays in the `Authorization` header. It is not in logs, errors, receipts or
+approval text.
 
 ### Rules
 

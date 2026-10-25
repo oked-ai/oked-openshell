@@ -10,7 +10,8 @@ oked:
   require_receipt: true
 
 github:
-  # Fine-grained token: read-only "Pull requests" and "Metadata", limited to the demo repo.
+  # Optional. Fine-grained token: read-only "Pull requests" and "Metadata", limited to the
+  # demo repo. Without it, each branch write needs approval and merge cards show less.
   read_token_env: OKED_GITHUB_READ_TOKEN
 
 approval:
