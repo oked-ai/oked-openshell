@@ -2,9 +2,11 @@
 # Starts oked-openshell in the foreground. The launchd agent runs this script.
 # Usage: deploy/macos/run.sh [config.yaml]
 #
-# Secrets: put OKED_API_KEY and OKED_GITHUB_READ_TOKEN in ~/.config/oked-openshell/env
-# (chmod 600, one NAME=value per line). Without OKED_API_KEY there, the script
-# uses the key that `oked init` saved in ~/.oked/config.json.
+# Secrets (optional): put OKED_API_KEY and OKED_GITHUB_READ_TOKEN in
+# ~/.config/oked-openshell/env (chmod 600, one NAME=value per line). Without
+# OKED_API_KEY there, the script uses the key that `oked init` saved in
+# ~/.oked/config.json. Without OKED_GITHUB_READ_TOKEN, the service still starts,
+# but it skips the GitHub lookups (see the README).
 set -eu
 REPO=${0:A:h:h:h}
 CONFIG=${1:-$REPO/examples/github-demo/oked-openshell.yaml}
