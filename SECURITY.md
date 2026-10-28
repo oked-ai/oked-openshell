@@ -1,6 +1,6 @@
 # Security policy
 
-## Report a security problem
+## Report a security problem in this repository
 
 Do not open a public issue for a security problem.
 
@@ -14,6 +14,10 @@ Only the maintainers can see your report. We reply on the report itself.
 
 ## Scope
 
-This repository holds the oked-openshell middleware, its tests and its examples. A problem
-in NVIDIA OpenShell itself goes to the
+This repository holds the oked-openshell middleware, its tests, and its examples.
+
+A problem in NVIDIA OpenShell itself goes to the
 [NVIDIA OpenShell security policy](https://github.com/NVIDIA/OpenShell/blob/main/SECURITY.md).
+
+A problem in the OKed service, signed receipts, or the approval apps goes to
+[oked.ai/security](https://oked.ai/security).
