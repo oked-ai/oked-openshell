@@ -6,7 +6,7 @@ OKed pauses one risky action from an agent in NVIDIA OpenShell and asks a person
 
 ![A merge waits for a yes or no, then the agent continues with a signed receipt.](docs/oked-flow.png)
 
-Live approval surfaces are Telegram and the [web dashboard](https://oked.ai/docs). The iPhone app is coming soon. It is not on the App Store.
+Live approval surfaces are Telegram and the [web dashboard](https://oked.ai/docs). iPhone app coming soon.
 
 OKed is an approval layer for AI agents ([oked.ai](https://oked.ai)). This repository is the OpenShell integration. It is an early preview. The catalog covers GitHub REST calls such as comments, branches, pull requests, merges, and branch deletes. GitHub GraphQL mutations are classified separately, as described below.
 
@@ -44,7 +44,7 @@ A GitHub write that the catalog does not list is an opaque write and defaults to
 
 ## Quickstart
 
-You need Node.js 22 or newer, an OpenShell gateway, and an OKed API key. [Sign up](https://oked.ai/signup) (there is no waitlist), then pair this machine. The pairing command below needs `@oked/claude-code` 0.6.5 or newer (`--key-only` is in 0.6.5 and in 0.6.20).
+You need Node.js 22 or newer, an OpenShell gateway, and an OKed API key. [Sign up](https://oked.ai/signup), then pair this machine. The pairing command below needs `@oked/claude-code` 0.6.5 or newer (`--key-only` is in 0.6.5 and in 0.6.20).
 
 **Start oked-openshell before you restart the gateway.** On OpenShell 0.1.6 the gateway still refuses to start when a registered middleware is down.
 
